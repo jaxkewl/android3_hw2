@@ -16,9 +16,10 @@
         android:drawSelectorOnTop="false">
     </ListView>
 
-    <TextView android:id="@android:id/empty"
+    <TextView android:id="@+id/text_view_empty_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:text="No images uploaded from this user."/>
 
 </LinearLayout>

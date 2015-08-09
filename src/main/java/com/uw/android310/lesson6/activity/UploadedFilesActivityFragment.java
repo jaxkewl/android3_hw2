@@ -225,6 +225,7 @@ public class UploadedFilesActivityFragment extends Fragment {
 
 
         ImageListAdapter imageListAdapter = new ImageListAdapter(getActivity(), mUploadedImages);
+        mUploadedImagesListView.setEmptyView(rootView.findViewById(R.id.text_view_empty_item));  //GOTCHA: make sure this is set, and the visibility of the textview is set correctly in the layout
         mUploadedImagesListView.setAdapter(imageListAdapter);
 
         mUploadedImagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
