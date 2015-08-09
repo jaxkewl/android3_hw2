@@ -22,6 +22,8 @@ import com.uw.android310.lesson6.util.Constants;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,8 +89,7 @@ public class UploadedFilesActivityFragment extends Fragment {
             if (entry.getKey().contains(key)) {
                 Log.d(TAG, "deleting key " + entry.getKey());
                 sharedPref.edit().remove(entry.getKey()).commit();
-            }
-            else if (entry.getValue().toString().contains(key)) {
+            } else if (entry.getValue().toString().contains(key)) {
                 Log.d(TAG, "deleting key because value contains what we are looking for " + entry.getKey());
                 sharedPref.edit().remove(entry.getKey()).commit();  //GOTCHA: call commit right after removing key
             }
@@ -190,24 +191,45 @@ public class UploadedFilesActivityFragment extends Fragment {
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Snackbar.make(mView, "Deleting image with deletehash " + deletehash, Snackbar.LENGTH_LONG).show();
-                deleteImage(deletehash);
-                deleteKeyFromSharedPref(fileKey);
+                final java.util.Timer timer = new Timer();
 
-                //reload the activity
-                getActivity().finish();
-                startActivity(getActivity().getIntent());
+                Snackbar.make(mView, "Deleting image with deletehash " + deletehash, Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        timer.cancel();
+                        //reload the activity
+                        getActivity().finish();
+                        startActivity(getActivity().getIntent());
+                    }
+                }).show();
+
+                timer.schedule(new TimerTask() {
+                    public void run() {
+                        deleteImage(deletehash);
+                        deleteKeyFromSharedPref(fileKey);
+
+                        //reload the activity
+                        getActivity().finish();
+                        startActivity(getActivity().getIntent());
+
+                    }
+                }, 3100);
+
+
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        //Snackbar.make(mView, "Delete cancelled.", Snackbar.LENGTH_LONG).show();
 
-                //reload the activity
-                getActivity().finish();
-                startActivity(getActivity().getIntent());
-            }
-        });
+                        //reload the activity
+                        getActivity().finish();
+                        startActivity(getActivity().getIntent());
+                    }
+                }
+
+        );
 
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
