@@ -12,7 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.uw.android310.lesson6.R;
-import com.uw.android310.lesson6.model.Image;
+
+import com.uw.android310.lesson6.model.ImageD;
 import com.uw.android310.lesson6.model.ImageDelete;
 import com.uw.android310.lesson6.service.ImageDeleteService;
 import com.uw.android310.lesson6.util.Constants;
@@ -70,6 +71,30 @@ public class UploadedFilesActivityFragment extends Fragment {
     //for each unique key, generate a delete Url
     private void populateDeleteUrlHashmap() {
         mDeleteUrlHashMap = new HashMap<String, String>();
+
+    }
+
+    private void deleteKeyFromSharedPref(String key) {
+        Log.d(TAG, "deleteKeyFromSharedPref " + key);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(Constants.sharedPrefName, getActivity().MODE_PRIVATE);
+
+        Map<String, ?> keys = sharedPref.getAll();
+
+        for (Map.Entry<String, ?> entry : keys.entrySet()) {
+            Log.d(TAG, "***************** ***************** " + entry.getKey() + ": " + entry.getValue().toString());
+
+            if (entry.getKey().contains(key)) {
+                Log.d(TAG, "deleting key " + entry.getKey());
+                sharedPref.edit().remove(entry.getKey());
+            }
+
+            if (entry.getValue().toString().contains(key)) {
+                Log.d(TAG, "deleting key because value contains what we are looking for " + entry.getKey());
+                sharedPref.edit().remove(entry.getKey());
+            }
+
+
+        }
 
     }
 
@@ -175,6 +200,8 @@ public class UploadedFilesActivityFragment extends Fragment {
 
                 Log.d(TAG, "onItemClick " + mUploadedImages.size() + " " + i + " " + l);
                 Snackbar.make(mView, "Deleting image with deletehash " + deletehash, Snackbar.LENGTH_LONG).show();
+
+                deleteKeyFromSharedPref(mUploadedImages.get(i));
             }
         });
 
@@ -201,10 +228,10 @@ public class UploadedFilesActivityFragment extends Fragment {
 
     }
 
-    private class UiCallback implements Callback<Image> {
+    private class UiCallback implements Callback<ImageD> {
 
         @Override
-        public void success(Image imageResponse, Response response) {
+        public void success(ImageD imageResponse, Response response) {
             Log.d(TAG, "success called... this is a callback after deleting an image ");
             Snackbar.make(mView, "delete successful " + response.toString(), Snackbar.LENGTH_LONG).show();
 /*

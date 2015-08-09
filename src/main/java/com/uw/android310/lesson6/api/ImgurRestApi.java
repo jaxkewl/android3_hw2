@@ -2,6 +2,7 @@ package com.uw.android310.lesson6.api;
 
 
 import com.uw.android310.lesson6.model.Image;
+import com.uw.android310.lesson6.model.ImageD;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -25,7 +26,7 @@ public interface ImgurRestApi {
      */
     @DELETE("/3/image/{id}")
     void deleteImage(
-            @Path("id") String deletehash, Callback<Image> callback
+            @Header("Authorization") String auth, @Path("id") String deletehash, Callback<ImageD> callback
     );
 
     /**

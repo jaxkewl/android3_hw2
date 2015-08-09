@@ -9,7 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.uw.android310.lesson6.api.ImgurRestApi;
-import com.uw.android310.lesson6.model.Image;
+
+import com.uw.android310.lesson6.model.ImageD;
 import com.uw.android310.lesson6.model.ImageDelete;
 import com.uw.android310.lesson6.util.Constants;
 import com.uw.android310.lesson6.util.NetworkUtils;
@@ -31,7 +32,7 @@ public class ImageDeleteService extends Service {
     }
 
 
-    public void execute(ImageDelete deleteImage, final Callback<Image> callback) {
+    public void execute(ImageDelete deleteImage, final Callback<ImageD> callback) {
 
         Log.d(TAG, "********* execute called... " + deleteImage);
 
@@ -44,10 +45,11 @@ public class ImageDeleteService extends Service {
         RestAdapter restAdapter = buildRestAdapter();
 
         restAdapter.create(ImgurRestApi.class).deleteImage(
+                Constants.getClientAuth(),                  // Client auth
                 deleteImage.deletehash,    //delete hash of image, generated when image was uploaded anonymously
-                new Callback<Image>() {
+                new Callback<ImageD>() {
                     @Override
-                    public void success(Image imageResponse, Response response) {
+                    public void success(ImageD imageResponse, Response response) {
                         Log.d(TAG, "******** success called...");
 
                         if (callback != null) {
@@ -85,6 +87,7 @@ public class ImageDeleteService extends Service {
 
     private RestAdapter buildRestAdapter() {
         RestAdapter imgurAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(ImgurRestApi.server)
                 .build();
 

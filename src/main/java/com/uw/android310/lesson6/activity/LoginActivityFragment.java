@@ -134,6 +134,10 @@ public class LoginActivityFragment extends Fragment {
                 Log.d(TAG, "passwords do not match, you entered: " + pass + ", but actual password is: " + sharedPref.getString(email, null));
             }
         }
+        else
+        {
+            mEditTextEmailAddr.setError("Email does not exist.");
+        }
         return false;
     }
 

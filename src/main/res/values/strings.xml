@@ -14,7 +14,6 @@
     <string name="notification_progress">Uploading image...</string>
 
 
-
     <!--Login and create new user page-->
     <string name="title_activity_login">LoginActivity</string>
     <string name="email_address_hint">Email Address</string>
@@ -25,9 +24,9 @@
     <string name="title_activity_landing_page">LandingPageActivity</string>
 
 
-
     <!--Landing page-->
     <string name="landing_page_uploaded_images">Uploaded Images</string>
     <string name="landing_page_upload_images">Upload Image</string>
+    <string name="landing_page_logout">Logout</string>
 
 </resources>

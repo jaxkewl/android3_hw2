@@ -2,6 +2,7 @@ package com.uw.android310.lesson6.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,13 +25,22 @@ public class LandingPageActivityFragment extends Fragment {
 
     private String mUser;
 
+    private View mRootView;
+
     @Bind(R.id.button_uploaded_images)
     Button mUploadedImages;
 
     @Bind(R.id.button_upload_images)
     Button mUploadImages;
 
+    @Bind(R.id.button_logout)
+    Button mLogout;
+
     public LandingPageActivityFragment() {
+    }
+
+    public View getView() {
+        return mRootView;
     }
 
     @Override
@@ -38,7 +48,7 @@ public class LandingPageActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_landing_page, container, false);
-
+        mRootView = rootView;
         ButterKnife.bind(this, rootView);
 
         //set the user name
@@ -66,6 +76,18 @@ public class LandingPageActivityFragment extends Fragment {
                 intent.putExtra(Constants.userName, mUser);
                 startActivity(intent);
 
+            }
+        });
+
+        mLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "clicked on logout...");
+                mUser = "";
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+
+                Snackbar.make(getView(), "Logging off", Snackbar.LENGTH_SHORT).show();
             }
         });
 
