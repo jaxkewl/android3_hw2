@@ -29,4 +29,11 @@
     <string name="landing_page_upload_images">Upload Image</string>
     <string name="landing_page_logout">Logout</string>
 
+    <!--Uploaded files pages-->
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_message">Confirm delete?</string>
+    <string name="dialog_title">Delete</string>
+
+
 </resources>

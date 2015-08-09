@@ -1,5 +1,7 @@
 package com.uw.android310.lesson6.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -12,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.uw.android310.lesson6.R;
-
 import com.uw.android310.lesson6.model.ImageD;
 import com.uw.android310.lesson6.model.ImageDelete;
 import com.uw.android310.lesson6.service.ImageDeleteService;
@@ -85,24 +86,19 @@ public class UploadedFilesActivityFragment extends Fragment {
 
             if (entry.getKey().contains(key)) {
                 Log.d(TAG, "deleting key " + entry.getKey());
-                sharedPref.edit().remove(entry.getKey());
+                sharedPref.edit().remove(entry.getKey()).commit();
             }
-
-            if (entry.getValue().toString().contains(key)) {
+            else if (entry.getValue().toString().contains(key)) {
                 Log.d(TAG, "deleting key because value contains what we are looking for " + entry.getKey());
-                sharedPref.edit().remove(entry.getKey());
+                sharedPref.edit().remove(entry.getKey()).commit();  //GOTCHA: call commit right after removing key
             }
-
 
         }
-
+        displayAllSharedPref();
     }
 
-    //this method will use the URL in the argument to return the matching delete hash
-    //that was saved off when the image was initially uploaded anonymously
-    private String captureDeletehash(String url) {
-        String deletehash = "";
 
+    private String getFileKey(String url) {
         String uploadKey = "";
         Pattern expression = Pattern.compile("\\.com\\/(\\w+)\\.jpg");
         Matcher matcher = expression.matcher(url);
@@ -112,6 +108,15 @@ public class UploadedFilesActivityFragment extends Fragment {
             uploadKey = matcher.group(1);
             break;
         }
+        return uploadKey;
+    }
+
+    //this method will use the URL in the argument to return the matching delete hash
+    //that was saved off when the image was initially uploaded anonymously
+    private String captureDeletehash(String url) {
+        String deletehash = "";
+
+        String uploadKey = getFileKey(url);
 
         //if we found an upload key find the deletehash that matches this upload key
         if (uploadKey.equals("")) {
@@ -175,6 +180,40 @@ public class UploadedFilesActivityFragment extends Fragment {
     }
 
 
+    private void confirmDelete(final String deletehash, final String fileKey) {
+        Log.d(TAG, "confirmDelete called with " + deletehash + " " + fileKey);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.dialog_message)
+                .setTitle(R.string.dialog_title);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Snackbar.make(mView, "Deleting image with deletehash " + deletehash, Snackbar.LENGTH_LONG).show();
+                deleteImage(deletehash);
+                deleteKeyFromSharedPref(fileKey);
+
+                //reload the activity
+                getActivity().finish();
+                startActivity(getActivity().getIntent());
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+
+                //reload the activity
+                getActivity().finish();
+                startActivity(getActivity().getIntent());
+            }
+        });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -193,15 +232,13 @@ public class UploadedFilesActivityFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d(TAG, "onItemClick " + mUploadedImages.size() + " " + i + " " + l);
 
-                //deleteImage(mUploadedImages.get(i));
-                String deletehash = captureDeletehash(mUploadedImages.get(i));
-                Log.d(TAG, "found delete Hash " + deletehash);
-                deleteImage(deletehash);
+                final String fileKey = getFileKey(mUploadedImages.get(i));
+                final String deletehash = captureDeletehash(mUploadedImages.get(i));
 
-                Log.d(TAG, "onItemClick " + mUploadedImages.size() + " " + i + " " + l);
-                Snackbar.make(mView, "Deleting image with deletehash " + deletehash, Snackbar.LENGTH_LONG).show();
+                Log.d(TAG, "deletehash and filekey " + deletehash + " " + fileKey);
 
-                deleteKeyFromSharedPref(mUploadedImages.get(i));
+                //don't delete right away, confirm with user first
+                confirmDelete(deletehash, fileKey);
             }
         });
 

@@ -56,7 +56,7 @@ public class LoginActivityFragment extends Fragment {
                 String pass = mEditTextPassword.getText().toString();
 
                 handleCreateNewUser();
-                Snackbar.make(rootView, "You clicked on add new user " + email + " " + pass, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, "New user created " + email + ", now click login.", Snackbar.LENGTH_LONG).show();
                 displayAllSharedPref();
             }
         });
@@ -70,7 +70,7 @@ public class LoginActivityFragment extends Fragment {
                 String pass = mEditTextPassword.getText().toString();
 
                 boolean loginValidated = validateLogin(email, pass);
-                Snackbar.make(rootView, "You clicked on login " + email + " " + pass, Snackbar.LENGTH_SHORT).show();
+                //Snackbar.make(rootView, "You clicked on login " + email + " " + pass, Snackbar.LENGTH_SHORT).show();
 
                 if (loginValidated) {
                     Intent intent = new Intent(getActivity(), LandingPageActivity.class);
@@ -78,8 +78,6 @@ public class LoginActivityFragment extends Fragment {
                     intent.putExtra(Constants.userName, email);
                     startActivity(intent);
                 }
-
-
             }
         });
     }
@@ -133,9 +131,7 @@ public class LoginActivityFragment extends Fragment {
             } else {
                 Log.d(TAG, "passwords do not match, you entered: " + pass + ", but actual password is: " + sharedPref.getString(email, null));
             }
-        }
-        else
-        {
+        } else {
             mEditTextEmailAddr.setError("Email does not exist.");
         }
         return false;

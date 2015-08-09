@@ -93,7 +93,7 @@ public class ImageUploadService extends Service {
 
     private RestAdapter buildRestAdapter() {
         RestAdapter imgurAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                //.setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(ImgurRestApi.server)
                 .build();
 
