@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Android310_HW2</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="choose">Choose Image</string>
+    <string name="upload">Upload</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="notification_fail">Image failed to upload...</string>
+    <string name="notification_share_link">Share link</string>
+    <string name="notifaction_success">Successfully uploaded</string>
+    <string name="notification_progress">Uploading image...</string>
+
+
+
+    <!--Login and create new user page-->
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="email_address_hint">Email Address</string>
+    <string name="password_hint">Password</string>
+    <string name="login_hint">Login</string>
+    <string name="create_new_hint">Create New</string>
+    <string name="title_activity_uploaded_files">UploadedFilesActivity</string>
+    <string name="title_activity_landing_page">LandingPageActivity</string>
+
+
+
+    <!--Landing page-->
+    <string name="landing_page_uploaded_images">Uploaded Images</string>
+    <string name="landing_page_upload_images">Upload Image</string>
+
+</resources>
